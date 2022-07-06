@@ -64,7 +64,7 @@ def data_loader(data_dir,
         np.random.shuffle(indices)
 
     train_idx, valid_idx = indices[split:], indices[:split]
-    train_sampler = SubsetRandomSampler(train_idx)
+    train_sampler = SubsetRandomSampler(train_idx) # 保证样本不重复
     valid_sampler = SubsetRandomSampler(valid_idx)
 
     train_loader = torch.utils.data.DataLoader(
@@ -202,6 +202,7 @@ for epoch in range(num_epochs):
         del images, labels, outputs
         torch.cuda.empty_cache()
         # gc.collect()
+        # 清除内存，尽量避免主动调用gc.collect()，除非当你new出一个大对象，使用完毕后希望立刻回收，释放内存
 
     print('Epoch [{}/{}], Loss: {:.4f}'
           .format(epoch + 1, num_epochs, loss.item()))
