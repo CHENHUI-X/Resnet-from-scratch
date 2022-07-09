@@ -32,7 +32,7 @@ def data_loader(data_dir,
 
     if test:
         dataset = datasets.CIFAR10(
-            root=data_dir, train=False,
+            root= data_dir, train=False,
             download=True, transform=transform,
         )
 
@@ -82,7 +82,6 @@ def data_loader(data_dir,
 # CIFAR10 dataset
 train_loader, valid_loader = data_loader(data_dir='./data',
                                          batch_size=8)
-
 test_loader = data_loader(data_dir='./data',
                           batch_size=8,
                           test=True)
@@ -114,7 +113,7 @@ class ResidualBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, block, layers, num_classes=10):
+    def __init__(self, Resblock, Resblocknumlist, num_classes = 10):
         super(ResNet, self).__init__()
         self.inplanes = 64 #  embedding dimension
         self.conv1 = nn.Sequential(
@@ -122,14 +121,15 @@ class ResNet(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU())
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1) # half size
-        self.layer0 = self._make_layer(block, 64, layers[0], stride=1)
-        self.layer1 = self._make_layer(block, 128, layers[1], stride=2) # half size
-        self.layer2 = self._make_layer(block, 256, layers[2], stride=2) # half size
-        self.layer3 = self._make_layer(block, 512, layers[3], stride=2) # half size
+        # _make_res_block produce a ResBlock
+        self.layer0 = self._make_res_block(Resblock, 64, Resblocknumlist[0], stride=1)
+        self.layer1 = self._make_res_block(Resblock, 128, Resblocknumlist[1], stride=2) # half size
+        self.layer2 = self._make_res_block(Resblock, 256, Resblocknumlist[2], stride=2) # half size
+        self.layer3 = self._make_res_block(Resblock, 512, Resblocknumlist[3], stride=2) # half size
         self.avgpool = nn.AvgPool2d(7, stride=1) # output tensor : (batch , 512 , 1 ,1 )
         self.fc = nn.Linear(512, num_classes)
 
-    def _make_layer(self, block, planes, blocks, stride=1):
+    def _make_res_block(self, Resblock, planes, Resblocknum, stride=1):
         downsample = None
         if stride != 1 or self.inplanes != planes:
             downsample = nn.Sequential(
@@ -137,10 +137,10 @@ class ResNet(nn.Module):
                 nn.BatchNorm2d(planes),
             ) # In general, the number of channels * 2, the size becomes 1/2
         layers = []
-        layers.append(block(self.inplanes, planes, stride, downsample)) #
+        layers.append(Resblock(self.inplanes, planes, stride, downsample)) #
         self.inplanes = planes
-        for i in range(1, blocks):
-            layers.append(block(self.inplanes, planes))
+        for i in range(1, Resblocknum):
+            layers.append(Resblock(self.inplanes, planes))
 
         return nn.Sequential(*layers)
 
@@ -193,8 +193,7 @@ for epoch in range(num_epochs):
         # Forward pass
         outputs = model(images)
         loss = criterion(outputs, labels)
-        # print('Epoch [{}/{}] - Step {} - Loss: {:.4f}'
-        #       .format(epoch + 1, num_epochs, step, loss.item()))
+
         # Backward and optimize
         optimizer.zero_grad()
         loss.backward()
@@ -203,6 +202,10 @@ for epoch in range(num_epochs):
         torch.cuda.empty_cache()
         # gc.collect()
         # 清除内存，尽量避免主动调用gc.collect()，除非当你new出一个大对象，使用完毕后希望立刻回收，释放内存
+
+        print('Epoch [{}/{}] - Step {} - Loss: {:.4f}'
+              .format(epoch + 1, num_epochs, step, loss.item()))
+
 
     print('Epoch [{}/{}], Loss: {:.4f}'
           .format(epoch + 1, num_epochs, loss.item()))
