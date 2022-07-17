@@ -33,7 +33,7 @@ def data_loader(data_dir,
     if test:
         dataset = datasets.CIFAR10(
             root= data_dir, train=False,
-            download=True, transform=transform,
+            download=False, transform=transform,
         )
 
         data_loader = torch.utils.data.DataLoader(
@@ -45,8 +45,8 @@ def data_loader(data_dir,
     # load the dataset , data_dir : Download data here
     train_dataset = datasets.CIFAR10(
         root=data_dir, train=True,
-        download=True, transform=transform,
-    )
+        download=False, transform=transform,
+    ) #
     # http://www.cs.toronto.edu/~kriz/cifar.html
 
     # do not need this operation
@@ -192,6 +192,7 @@ for epoch in range(num_epochs):
 
         # Forward pass
         outputs = model(images)
+
         loss = criterion(outputs, labels)
 
         # Backward and optimize
