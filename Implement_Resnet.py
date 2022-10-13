@@ -181,7 +181,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, weight_decay =
 
 # Train the model
 total_step = len(train_loader)
-
+epoch_loss = 0
 step = 0
 for epoch in range(num_epochs):
     for i, (images, labels) in enumerate(train_loader):
@@ -194,7 +194,7 @@ for epoch in range(num_epochs):
         outputs = model(images)
 
         loss = criterion(outputs, labels)
-
+        epoch_loss += loss
         # Backward and optimize
         optimizer.zero_grad()
         loss.backward()
@@ -207,9 +207,9 @@ for epoch in range(num_epochs):
         print('Epoch [{}/{}] - Step {} - Loss: {:.4f}'
               .format(epoch + 1, num_epochs, step, loss.item()))
 
-
+    epoch_loss /= total_step
     print('Epoch [{}/{}], Loss: {:.4f}'
-          .format(epoch + 1, num_epochs, loss.item()))
+          .format(epoch + 1, num_epochs, epoch_loss.item()))
 
     # Validation
     with torch.no_grad():
