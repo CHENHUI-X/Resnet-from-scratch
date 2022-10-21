@@ -31,3 +31,7 @@ change into :
             with open(str(self.diff_path), "w",encoding='utf-8') as f:
                 f.write(self.diff)
 ```
+
+---
+2022年10月21日更新
+`Resnet_board.py` 文件结合加入了tensor board进行可视化实现.
