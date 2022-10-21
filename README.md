@@ -6,3 +6,6 @@ Implement a simple Resnet according to the tutorial
 - 使用pytorch自带的dataloader下载CIFAR-10数据
 - 添加了部分注释，标识了layer的输出shape
 - 添加了visualization part
+---
+2022年10月21日更新
+`Resnet_labml.py` 文件结合了Labmlai的writer库进行实现.
