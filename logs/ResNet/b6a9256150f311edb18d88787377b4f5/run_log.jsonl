@@ -1,0 +1,1 @@
+{"status": "crashed", "rank": 0, "details": "output with shape [1, 224, 224] doesn't match the broadcast shape [3, 224, 224]", "time": 1666324326.4717243}

@@ -1,0 +1,16 @@
+comment: ''
+commit: 3a750fa9e513c7ea482a732b89f4932dc97bf955
+commit_message: Finetune Code and Add Comments
+is_dirty: true
+load_run: null
+name: ResNet
+notes: ''
+python_file: F:\Study\python\code\Deeplearning\Resnet\Resnet_labml.py
+repo_remotes:
+- https://github.com/CHENHUI-X/Resnet-from-scratch.git
+start_step: 0
+tags:
+- ResNet
+trial_date: '2022-10-20'
+trial_time: '20:34:42'
+uuid: 91eaa886507311eda33d88787377b4f5
