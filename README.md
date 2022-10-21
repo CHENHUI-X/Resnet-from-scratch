@@ -9,3 +9,25 @@ Implement a simple Resnet according to the tutorial
 ---
 2022年10月21日更新
 `Resnet_labml.py` 文件结合了Labmlai的writer库进行实现.
+
+If you have an error about decoder , you can put the `save_info`  function in `labml\internal\experiment\experiment_run.py` :
+```python
+
+    def save_info(self):
+        ...
+        if self.diff is not None:
+            with open(str(self.diff_path), "w") as f:
+                f.write(self.diff)
+```
+
+change into :
+
+
+```python
+
+    def save_info(self):
+        ...
+        if self.diff is not None:
+            with open(str(self.diff_path), "w",encoding='utf-8') as f:
+                f.write(self.diff)
+```
